@@ -4,10 +4,10 @@ Cliente JS para la creación de tokens fungibles, transferencias y seteo de meta
 
 ## Overview
 
-- **index.ts**: archivo principal para la creación y transferencia de tokens
-- **initializeKeypair.ts**: inicializa una nueva wallet y la fondea para la posterior creación del token
-- **metadata.ts**: seteo de metadata del token luego de crearlo
-- **token.service.ts**: servicio con las funciones necesarias para interactuar con tokens
+- **src/index.ts**: archivo principal para la creación y transferencia de tokens
+- **src/initializeKeypair.ts**: inicializa una nueva wallet y la fondea para la posterior creación del token
+- **src/metadata.ts**: seteo de metadata del token luego de crearlo
+- **src/token.service.ts**: servicio con las funciones necesarias para interactuar con tokens
 
 > Utilizar al menos NodeJS v16
 
