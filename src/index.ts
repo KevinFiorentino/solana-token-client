@@ -2,7 +2,7 @@ import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnToke
 import { initializeKeypair } from './initializeKeypair'
 import * as web3 from '@solana/web3.js'
 
-const ADDRESS_RECEIVER = ''
+const ADDRESS_RECEIVER = 'Giv8zTCnvxwFHMSnuZ4Q9EoHASzxxwKstuPchGX395Vk'
 
 async function main() {
 

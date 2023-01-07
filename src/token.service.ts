@@ -116,7 +116,7 @@ export async function createTokenMetadata(
   const file = toMetaplexFile(buffer, image_name)
 
   const imageUri = await metaplex.storage().upload(file)
-  console.log('image uri:', imageUri)
+  console.log('Image URI:', imageUri)
 
   // Upload metadata and get metadata uri (off chain metadata)
   const { uri } = await metaplex
@@ -126,7 +126,7 @@ export async function createTokenMetadata(
       description: description,
       image: imageUri,
     })
-  console.log('metadata uri:', uri)
+  console.log('Metadata URI:', uri)
 
   // Get metadata account address
   const metadataPDA = metaplex.nfts().pdas().metadata({mint})

@@ -3,10 +3,10 @@ import { createTokenMetadata } from './token.service';
 import { initializeKeypair } from './initializeKeypair'
 import * as web3 from '@solana/web3.js'
 
-const TOKEN_NAME = ''
-const TOKEN_SYMBOL = ''
-const TOKEN_DESCRIPTION = ''
-const TOKEN_IMAGE_URL = './assets/notimation.png'           // Tamaño aprox. 100x100
+const TOKEN_NAME = 'Token Name'
+const TOKEN_SYMBOL = 'TKN'
+const TOKEN_DESCRIPTION = 'My first token!'
+const TOKEN_IMAGE_URL = './assets/token-image.png'     // Tamaño aprox. 100x100
 
 const MINT_ADDRESS = ''
 
