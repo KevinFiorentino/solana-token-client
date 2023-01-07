@@ -4,7 +4,8 @@
     "description": "Starter template for a Solana client script",
     "main": "index.ts",
     "scripts": {
-        "start": "ts-node src/index.ts"
+        "start": "ts-node src/index.ts",
+        "metadata": "ts-node src/metadata.ts"
     },
     "keywords": [],
     "author": "test",

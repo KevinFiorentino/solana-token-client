@@ -1,6 +1,5 @@
-import { DataV2, createCreateMetadataAccountV2Instruction, createUpdateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
-import { Metaplex, keypairIdentity, bundlrStorage, toMetaplexFile } from "@metaplex-foundation/js"
-import { initializeKeypair } from "./initializeKeypair"
+import { DataV2, createCreateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
+import { Metaplex, toMetaplexFile } from "@metaplex-foundation/js"
 import * as web3 from "@solana/web3.js"
 import * as token from "@solana/spl-token"
 import * as fs from "fs"
@@ -106,11 +105,15 @@ export async function createTokenMetadata(
   user: web3.Keypair,
   name: string,
   symbol: string,
-  description: string
+  description: string,
+  image_url: string,
 ) {
 
-  const buffer = fs.readFileSync("./assets/WTTM.png")
-  const file = toMetaplexFile(buffer, "WTTM.png")
+  const l = image_url.split("/").length
+  const image_name = image_url.split("/")[l - 1]
+
+  const buffer = fs.readFileSync(image_url)
+  const file = toMetaplexFile(buffer, image_name)
 
   const imageUri = await metaplex.storage().upload(file)
   console.log("image uri:", imageUri)

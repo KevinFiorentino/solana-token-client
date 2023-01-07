@@ -1,61 +1,38 @@
-import { DataV2, createCreateMetadataAccountV2Instruction, createUpdateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
-import { Metaplex, keypairIdentity, bundlrStorage, toMetaplexFile } from "@metaplex-foundation/js"
+import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js"
 import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens, createTokenMetadata } from './token.service';
 import { initializeKeypair } from "./initializeKeypair"
 import * as web3 from "@solana/web3.js"
-import * as token from "@solana/spl-token"
-import * as fs from "fs"
 
-const TOKEN_NAME = 'Pink Floyd'
-const TOKEN_SYMBOL = 'WTTM'
-const TOKEN_DESCRIPTION = 'Welcome to the Machine'
-
-const MINT_ADDRESS = "GembXivEuz6sBcHPFayKXN3vLGDzYN4uMz15VowLdaSy"   // Address principal del token fungible
-
+const ADDRESS_RECEIVER = "Giv8zTCnvxwFHMSnuZ4Q9EoHASzxxwKstuPchGX395Vk"
 
 async function main() {
 
   const connection = new web3.Connection(web3.clusterApiUrl("devnet"))
-  const user = await initializeKeypair(connection)
 
-  /* const mint = await createNewMint(connection, user, user.publicKey, user.publicKey, 2)
+  // Creamos u obtenemos la wallet guardada en el .env
+  // La misma tendrá la autoridad del token
+  const wallet = await initializeKeypair(connection)
 
-  const tokenAccount = await createTokenAccount(connection, user, mint, user.publicKey)
-  await mintTokens(connection, user, mint, tokenAccount.address, user, 100)
+  // Creamos nuevo MintAccount (https://docs.metaplex.com/programs/token-metadata/overview)
+  const mint = await createNewMint(connection, wallet, wallet.publicKey, wallet.publicKey, 2)
 
-  const receiver = new web3.PublicKey('9BvQr37W6ohEKk3aHrTZ9gRAN2RK1LuUGPmKn5C2H6XC')
+  // Creamos TokenAccount asociado a la wallet
+  const tokenAccount = await createTokenAccount(connection, wallet, mint, wallet.publicKey)
 
-  const receiverTokenAccount = await createTokenAccount(connection, user, mint, receiver)
+  // Minteamos 100 tokens, solo la autoridad del token puede hacerlo
+  await mintTokens(connection, wallet, mint, tokenAccount.address, wallet, 100)
+
+  // Enviamos 50 tokens a ADDRESS_RECEIVER
+  const receiver = new web3.PublicKey(ADDRESS_RECEIVER)
+  const receiverTokenAccount = await createTokenAccount(connection, wallet, mint, receiver)
   await transferTokens(
     connection,
-    user,
+    wallet,
     tokenAccount.address,
     receiverTokenAccount.address,
-    user.publicKey,
+    wallet.publicKey,
     50,
     mint
-  ) */
-
-  // Metaplex setup
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(user))
-    .use(
-      bundlrStorage({
-        address: "https://devnet.bundlr.network",
-        providerUrl: "https://api.devnet.solana.com",
-        timeout: 60000,
-      })
-    )
-  
-  // Calling the token 
-  await createTokenMetadata(
-    connection,
-    metaplex,
-    new web3.PublicKey(MINT_ADDRESS),
-    user,
-    TOKEN_NAME,
-    TOKEN_SYMBOL,
-    TOKEN_DESCRIPTION
   )
 }
 
