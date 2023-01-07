@@ -1,10 +1,15 @@
+import { DataV2, createCreateMetadataAccountV2Instruction, createUpdateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
+import { Metaplex, keypairIdentity, bundlrStorage, toMetaplexFile } from "@metaplex-foundation/js"
 import { initializeKeypair } from "./initializeKeypair"
 import * as web3 from "@solana/web3.js"
 import * as token from "@solana/spl-token"
-
-import { Metaplex, keypairIdentity, bundlrStorage, toMetaplexFile } from "@metaplex-foundation/js"
-import { DataV2, createCreateMetadataAccountV2Instruction, createUpdateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
 import * as fs from "fs"
+
+const TOKEN_NAME = 'Pink Floyd'
+const TOKEN_SYMBOL = 'WTTM'
+const TOKEN_DESCRIPTION = 'Welcome to the Machine'
+
+const MINT_ADDRESS = "GembXivEuz6sBcHPFayKXN3vLGDzYN4uMz15VowLdaSy"   // Address principal del token fungible
 
 async function createNewMint(
   connection: web3.Connection,
@@ -41,8 +46,8 @@ async function mintTokens(
   authority: web3.Keypair,
   amount: number
 ) {
-  const mintInfo = await token.getMint(connection, mint)
 
+  const mintInfo = await token.getMint(connection, mint)
   const transactionSignature = await token.mintTo(
     connection,
     payer,
@@ -64,8 +69,8 @@ async function transferTokens(
   amount: number,
   mint: web3.PublicKey
 ) {
-  const mintInfo = await token.getMint(connection, mint)
 
+  const mintInfo = await token.getMint(connection, mint)
   const transactionSignature = await token.transfer(
     connection,
     payer,
@@ -88,7 +93,6 @@ async function burnTokens(
 ) {
 
   const mintInfo = await token.getMint(connection, mint)
-
   const transactionSignature = await token.burn(
     connection,
     payer,
@@ -194,8 +198,6 @@ async function main() {
     mint
   ) */
 
-  const MINT_ADDRESS = "GembXivEuz6sBcHPFayKXN3vLGDzYN4uMz15VowLdaSy"
-
   // Metaplex setup
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(user))
@@ -213,9 +215,9 @@ async function main() {
     metaplex,
     new web3.PublicKey(MINT_ADDRESS),
     user,
-    "Pink Floyd",              // Token name
-    "WTTM",                    // Token symbol 
-    "Welcome to the Machine"   // Token description
+    TOKEN_NAME,
+    TOKEN_SYMBOL,
+    TOKEN_DESCRIPTION
   )
 }
 

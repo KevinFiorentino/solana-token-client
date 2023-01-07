@@ -6,6 +6,7 @@ dotenv.config()
 export async function initializeKeypair(
   connection: web3.Connection
 ): Promise<web3.Keypair> {
+
   if (!process.env.PRIVATE_KEY) {
     console.log("Creating .env file")
     const signer = web3.Keypair.generate()
@@ -19,6 +20,7 @@ export async function initializeKeypair(
   const secretKey = Uint8Array.from(secret)
   const keypairFromSecretKey = web3.Keypair.fromSecretKey(secretKey)
   await airdropSolIfNeeded(keypairFromSecretKey, connection)
+  
   return keypairFromSecretKey
 }
 
