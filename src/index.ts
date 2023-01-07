@@ -1,5 +1,4 @@
-import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js"
-import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens, createTokenMetadata } from './token.service';
+import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens } from './token.service';
 import { initializeKeypair } from "./initializeKeypair"
 import * as web3 from "@solana/web3.js"
 

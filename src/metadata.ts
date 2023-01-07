@@ -1,8 +1,7 @@
 import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js"
-import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens, createTokenMetadata } from './token.service';
+import { createTokenMetadata } from './token.service';
 import { initializeKeypair } from "./initializeKeypair"
 import * as web3 from "@solana/web3.js"
-
 
 const TOKEN_NAME = 'Pink Floyd'
 const TOKEN_SYMBOL = 'WTTM'
@@ -10,7 +9,6 @@ const TOKEN_DESCRIPTION = 'Welcome to the Machine'
 const TOKEN_IMAGE_URL = './assets/WTTM.png'           // Tamaño aprox. 100x100
 
 const MINT_ADDRESS = ''
-
 
 async function main() {
 
@@ -28,7 +26,7 @@ async function main() {
       timeout: 60000,
     })
   )
-  
+
   // Creamos MetadataAccount del token (https://docs.metaplex.com/programs/token-metadata/overview)
   await createTokenMetadata(
     connection,
