@@ -1,8 +1,8 @@
-import { DataV2, createCreateMetadataAccountV2Instruction } from "@metaplex-foundation/mpl-token-metadata"
-import { Metaplex, toMetaplexFile } from "@metaplex-foundation/js"
-import * as web3 from "@solana/web3.js"
-import * as token from "@solana/spl-token"
-import * as fs from "fs"
+import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata'
+import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js'
+import * as web3 from '@solana/web3.js'
+import * as token from '@solana/spl-token'
+import * as fs from 'fs'
 
 export async function createNewMint(
   connection: web3.Connection,
@@ -109,14 +109,14 @@ export async function createTokenMetadata(
   image_url: string,
 ) {
 
-  const l = image_url.split("/").length
-  const image_name = image_url.split("/")[l - 1]
+  const l = image_url.split('/').length
+  const image_name = image_url.split('/')[l - 1]
 
   const buffer = fs.readFileSync(image_url)
   const file = toMetaplexFile(buffer, image_name)
 
   const imageUri = await metaplex.storage().upload(file)
-  console.log("image uri:", imageUri)
+  console.log('image uri:', imageUri)
 
   // Upload metadata and get metadata uri (off chain metadata)
   const { uri } = await metaplex
@@ -126,7 +126,7 @@ export async function createTokenMetadata(
       description: description,
       image: imageUri,
     })
-  console.log("metadata uri:", uri)
+  console.log('metadata uri:', uri)
 
   // Get metadata account address
   const metadataPDA = metaplex.nfts().pdas().metadata({mint})

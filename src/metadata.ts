@@ -1,18 +1,18 @@
-import { Metaplex, keypairIdentity, bundlrStorage } from "@metaplex-foundation/js"
+import { Metaplex, keypairIdentity, bundlrStorage } from '@metaplex-foundation/js'
 import { createTokenMetadata } from './token.service';
-import { initializeKeypair } from "./initializeKeypair"
-import * as web3 from "@solana/web3.js"
+import { initializeKeypair } from './initializeKeypair'
+import * as web3 from '@solana/web3.js'
 
-const TOKEN_NAME = 'Pink Floyd'
-const TOKEN_SYMBOL = 'WTTM'
-const TOKEN_DESCRIPTION = 'Welcome to the Machine'
-const TOKEN_IMAGE_URL = './assets/WTTM.png'           // Tamaño aprox. 100x100
+const TOKEN_NAME = ''
+const TOKEN_SYMBOL = ''
+const TOKEN_DESCRIPTION = ''
+const TOKEN_IMAGE_URL = './assets/notimation.png'           // Tamaño aprox. 100x100
 
 const MINT_ADDRESS = ''
 
 async function main() {
 
-  const connection = new web3.Connection(web3.clusterApiUrl("devnet"))
+  const connection = new web3.Connection(web3.clusterApiUrl('devnet'))
 
   const wallet = await initializeKeypair(connection)
 
@@ -21,8 +21,8 @@ async function main() {
   .use(keypairIdentity(wallet))
   .use(
     bundlrStorage({   // Storage de la imagen
-      address: "https://devnet.bundlr.network",
-      providerUrl: "https://api.devnet.solana.com",
+      address: 'https://devnet.bundlr.network',
+      providerUrl: 'https://api.devnet.solana.com',
       timeout: 60000,
     })
   )
@@ -42,7 +42,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log("Finished successfully")
+    console.log('Finished successfully')
     process.exit(0)
   })
   .catch((error) => {
