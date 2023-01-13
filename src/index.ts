@@ -1,12 +1,12 @@
 import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens } from './token.service';
 import { initializeKeypair } from './initializeKeypair'
-import * as web3 from '@solana/web3.js'
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js'
 
 const ADDRESS_RECEIVER = 'Giv8zTCnvxwFHMSnuZ4Q9EoHASzxxwKstuPchGX395Vk'
 
 async function main() {
 
-  const connection = new web3.Connection(web3.clusterApiUrl('devnet'))
+  const connection = new Connection(clusterApiUrl('devnet'))
 
   // Creamos u obtenemos la wallet guardada en el .env
   // La misma tendrá la autoridad del token
@@ -22,7 +22,7 @@ async function main() {
   await mintTokens(connection, wallet, mint, tokenAccount.address, wallet, 100)
 
   // Enviamos 50 tokens a ADDRESS_RECEIVER
-  const receiver = new web3.PublicKey(ADDRESS_RECEIVER)
+  const receiver = new PublicKey(ADDRESS_RECEIVER)
   const receiverTokenAccount = await createTokenAccount(connection, wallet, mint, receiver)
   await transferTokens(
     connection,

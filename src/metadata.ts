@@ -1,7 +1,7 @@
 import { Metaplex, keypairIdentity, bundlrStorage } from '@metaplex-foundation/js'
 import { createTokenMetadata } from './token.service';
 import { initializeKeypair } from './initializeKeypair'
-import * as web3 from '@solana/web3.js'
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js'
 
 const TOKEN_NAME = 'Token Name'
 const TOKEN_SYMBOL = 'TKN'
@@ -12,7 +12,7 @@ const MINT_ADDRESS = ''
 
 async function main() {
 
-  const connection = new web3.Connection(web3.clusterApiUrl('devnet'))
+  const connection = new Connection(clusterApiUrl('devnet'))
 
   const wallet = await initializeKeypair(connection)
 
@@ -31,7 +31,7 @@ async function main() {
   await createTokenMetadata(
     connection,
     metaplex,
-    new web3.PublicKey(MINT_ADDRESS),
+    new PublicKey(MINT_ADDRESS),
     wallet,
     TOKEN_NAME,
     TOKEN_SYMBOL,

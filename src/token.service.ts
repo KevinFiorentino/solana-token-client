@@ -1,47 +1,47 @@
 import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata'
 import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js'
-import * as web3 from '@solana/web3.js'
-import * as token from '@solana/spl-token'
+import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
+import { createMint, getMint, mintTo, transfer, burn, getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
 import * as fs from 'fs'
 
 export async function createNewMint(
-  connection: web3.Connection,
-  payer: web3.Keypair,
-  mintAuthority: web3.PublicKey,
-  freezeAuthority: web3.PublicKey,
+  connection: Connection,
+  payer: Keypair,
+  mintAuthority: PublicKey,          // Address con permisos para crear nuevos tokens
+  freezeAuthority: PublicKey,        // Address con permisos para bloquear la creación de tokens (centralización)
   decimals: number
-): Promise<web3.PublicKey> {
+): Promise<PublicKey> {
 
-  const tokenMint = await token.createMint(connection, payer, mintAuthority, freezeAuthority, decimals);
+  const tokenMint = await createMint(connection, payer, mintAuthority, freezeAuthority, decimals);
   console.log(`Token Mint: ${tokenMint}`)
 
   return tokenMint;
 }
 
 export async function createTokenAccount(
-  connection: web3.Connection,
-  payer: web3.Keypair,
-  mint: web3.PublicKey,
-  owner: web3.PublicKey
+  connection: Connection,
+  payer: Keypair,
+  mint: PublicKey,
+  owner: PublicKey
 ) {
 
-  const tokenAccount = await token.getOrCreateAssociatedTokenAccount(connection, payer, mint, owner)
+  const tokenAccount = await getOrCreateAssociatedTokenAccount(connection, payer, mint, owner)
   console.log(`Token Account: ${tokenAccount.address}`)
 
   return tokenAccount
 }
 
 export async function mintTokens(
-  connection: web3.Connection,
-  payer: web3.Keypair,
-  mint: web3.PublicKey,
-  destination: web3.PublicKey,
-  authority: web3.Keypair,
+  connection: Connection,
+  payer: Keypair,
+  mint: PublicKey,
+  destination: PublicKey,
+  authority: Keypair,
   amount: number
 ) {
 
-  const mintInfo = await token.getMint(connection, mint)
-  const transactionSignature = await token.mintTo(
+  const mintInfo = await getMint(connection, mint)
+  const transactionSignature = await mintTo(
     connection,
     payer,
     mint,
@@ -54,17 +54,17 @@ export async function mintTokens(
 }
 
 export async function transferTokens(
-  connection: web3.Connection,
-  payer: web3.Keypair,
-  source: web3.PublicKey,
-  destination: web3.PublicKey,
-  owner: web3.PublicKey,
+  connection: Connection,
+  payer: Keypair,
+  source: PublicKey,
+  destination: PublicKey,
+  owner: PublicKey,
   amount: number,
-  mint: web3.PublicKey
+  mint: PublicKey
 ) {
 
-  const mintInfo = await token.getMint(connection, mint)
-  const transactionSignature = await token.transfer(
+  const mintInfo = await getMint(connection, mint)
+  const transactionSignature = await transfer(
     connection,
     payer,
     source,
@@ -77,16 +77,16 @@ export async function transferTokens(
 }
 
 export async function burnTokens(
-  connection: web3.Connection,
-  payer: web3.Keypair,
-  account: web3.PublicKey,
-  mint: web3.PublicKey,
-  owner: web3.Keypair,
+  connection: Connection,
+  payer: Keypair,
+  account: PublicKey,
+  mint: PublicKey,
+  owner: Keypair,
   amount: number
 ) {
 
-  const mintInfo = await token.getMint(connection, mint)
-  const transactionSignature = await token.burn(
+  const mintInfo = await getMint(connection, mint)
+  const transactionSignature = await burn(
     connection,
     payer,
     account,
@@ -99,10 +99,10 @@ export async function burnTokens(
 }
 
 export async function createTokenMetadata(
-  connection: web3.Connection,
+  connection: Connection,
   metaplex: Metaplex,
-  mint: web3.PublicKey,
-  user: web3.Keypair,
+  mint: PublicKey,
+  user: Keypair,
   name: string,
   symbol: string,
   description: string,
@@ -143,7 +143,7 @@ export async function createTokenMetadata(
   } as DataV2
 
   // Transaction to create metadata account
-  const transaction = new web3.Transaction().add(
+  const transaction = new Transaction().add(
     createCreateMetadataAccountV2Instruction(
       {
         metadata: metadataPDA,
@@ -161,7 +161,7 @@ export async function createTokenMetadata(
     )
   )
 
-  const transactionSignature = await web3.sendAndConfirmTransaction(
+  const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
     [user]
