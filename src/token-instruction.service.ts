@@ -1,7 +1,10 @@
 import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata'
 import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js'
-import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js'
-import { Account, createMint, getMint, mintTo, transfer, burn, getOrCreateAssociatedTokenAccount } from '@solana/spl-token'
+import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram } from '@solana/web3.js'
+import {
+  getMint, getOrCreateAssociatedTokenAccount, createInitializeMintInstruction, createMintToInstruction, createTransferInstruction, createBurnInstruction,
+  TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, MINT_SIZE, MintLayout
+} from '@solana/spl-token'
 import * as fs from 'fs'
 
 export async function createNewMint(
@@ -12,10 +15,37 @@ export async function createNewMint(
   decimals: number
 ): Promise<PublicKey> {
 
-  const tokenMint = await createMint(connection, payer, mintAuthority, freezeAuthority, decimals);
-  console.log(`Token Mint: ${tokenMint}`)
+  // Source: https://www.programcreek.com/typescript/?api=@solana/spl-token.createInitializeMintInstruction
 
-  return tokenMint;
+  const tokenMint = new Keypair();
+  const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
+
+  const transaction = new Transaction().add(
+    SystemProgram.createAccount({
+      fromPubkey: payer.publicKey,
+      newAccountPubkey: tokenMint.publicKey,
+      lamports: mintRent,
+      space: MINT_SIZE,
+      programId: TOKEN_PROGRAM_ID,
+    }),
+    createInitializeMintInstruction(
+      tokenMint.publicKey,
+      decimals,
+      mintAuthority,
+      freezeAuthority,
+      TOKEN_PROGRAM_ID
+    )
+  );
+
+  const transactionSignature = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [payer, tokenMint]
+  );
+
+  console.log('tokenMint', tokenMint.publicKey.toString())
+
+  return tokenMint.publicKey;
 }
 
 export async function createTokenAccount(
@@ -23,7 +53,7 @@ export async function createTokenAccount(
   payer: Keypair,
   mint: PublicKey,
   owner: PublicKey
-): Promise<Account> {
+) {
 
   const tokenAccount = await getOrCreateAssociatedTokenAccount(connection, payer, mint, owner)
   console.log(`Token Account: ${tokenAccount.address}`)
@@ -41,14 +71,20 @@ export async function mintTokens(
 ) {
 
   const mintInfo = await getMint(connection, mint)
-  const transactionSignature = await mintTo(
+  const transaction = new Transaction().add(
+    createMintToInstruction(
+      mint,
+      destination,
+      authority.publicKey,
+      amount * 10 ** mintInfo.decimals
+    )
+  );
+
+  const transactionSignature = await sendAndConfirmTransaction(
     connection,
-    payer,
-    mint,
-    destination,
-    authority,
-    amount * 10 ** mintInfo.decimals
-  )
+    transaction,
+    [payer]
+  );
 
   console.log(`Mint Token Transaction: ${transactionSignature}`)
 }
@@ -64,14 +100,20 @@ export async function transferTokens(
 ) {
 
   const mintInfo = await getMint(connection, mint)
-  const transactionSignature = await transfer(
+  const transaction = new Transaction().add(
+    createTransferInstruction(
+      source,                             // Token account address
+      destination,                        // Token account address
+      owner,
+      amount * 10 ** mintInfo.decimals
+    )
+  );
+
+  const transactionSignature = await sendAndConfirmTransaction(
     connection,
-    payer,
-    source,
-    destination,
-    owner,
-    amount * 10 ** mintInfo.decimals
-  )
+    transaction,
+    [payer]
+  );
 
   console.log(`Transfer Transaction: ${transactionSignature}`)
 }
@@ -86,14 +128,20 @@ export async function burnTokens(
 ) {
 
   const mintInfo = await getMint(connection, mint)
-  const transactionSignature = await burn(
+  const transaction = new Transaction().add(
+    createBurnInstruction(
+      account,
+      mint,
+      owner.publicKey,
+      amount * 10 ** mintInfo.decimals
+    )
+  );
+
+  const transactionSignature = await sendAndConfirmTransaction(
     connection,
-    payer,
-    account,
-    mint,
-    owner,
-    amount * 10 ** mintInfo.decimals
-  )
+    transaction,
+    [payer]
+  );
 
   console.log(`Burn Transaction: ${transactionSignature}`)
 }

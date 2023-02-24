@@ -1,6 +1,8 @@
-import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens } from './token.service';
 import { initializeKeypair } from './initializeKeypair'
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js'
+
+// import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens } from './token.service';
+import { createNewMint, createTokenAccount, mintTokens, transferTokens, burnTokens } from './token-instruction.service';
 
 const ADDRESS_RECEIVER = 'Giv8zTCnvxwFHMSnuZ4Q9EoHASzxxwKstuPchGX395Vk'
 
@@ -30,7 +32,7 @@ async function main() {
     tokenAccount.address,
     receiverTokenAccount.address,
     wallet.publicKey,
-    50,
+    1,
     mint
   )
 }
