@@ -7,8 +7,8 @@ import * as fs from 'fs';
 export async function createNewMint(
   connection: Connection,
   payer: Keypair,
-  mintAuthority: PublicKey,          // Address con permisos para crear nuevos tokens
-  freezeAuthority: PublicKey,        // Address con permisos para bloquear la creación de tokens (centralización)
+  mintAuthority: PublicKey,          // Address with permissions to create new tokens
+  freezeAuthority: PublicKey,        // Address with permissions to freeze the creation of new tokens (centralization)
   decimals: number
 ): Promise<PublicKey> {
 

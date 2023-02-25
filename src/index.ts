@@ -10,20 +10,20 @@ async function main() {
 
   const connection = new Connection(clusterApiUrl('devnet'))
 
-  // Creamos u obtenemos la wallet guardada en el .env
-  // La misma tendrá la autoridad del token
+  // Create or get the wallet from .env
+  // This wallet will get the token authority
   const wallet = await initializeKeypair(connection)
 
-  // Creamos nuevo MintAccount (https://docs.metaplex.com/programs/token-metadata/overview)
+  // Create new MintAccount (https://docs.metaplex.com/programs/token-metadata/overview)
   const mint = await createNewMint(connection, wallet, wallet.publicKey, wallet.publicKey, 2)
 
-  // Creamos TokenAccount asociado a la wallet
+  // Create TokenAccount associated to the wallet
   const tokenAccount = await createTokenAccount(connection, wallet, mint, wallet.publicKey)
 
-  // Minteamos 100 tokens, solo la autoridad del token puede hacerlo
+  // Mint 100 tokens, only the token authority can do it
   await mintTokens(connection, wallet, mint, tokenAccount.address, wallet, 100)
 
-  // Enviamos 50 tokens a ADDRESS_RECEIVER
+  // Send 50 tokens to ADDRESS_RECEIVER
   const receiver = new PublicKey(ADDRESS_RECEIVER)
   const receiverTokenAccount = await createTokenAccount(connection, wallet, mint, receiver)
   await transferTokens(
@@ -39,10 +39,10 @@ async function main() {
 
 main()
   .then(() => {
-    console.log('Finished successfully')
-    process.exit(0)
+    console.log('Finished successfully');
+    process.exit(0);
   })
   .catch((error) => {
-    console.log(error)
-    process.exit(1)
+    console.log(error);
+    process.exit(1);
   })

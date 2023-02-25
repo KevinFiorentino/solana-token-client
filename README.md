@@ -1,25 +1,26 @@
 # Solana Fungible Token Client
 
-Cliente JS para la creación de tokens fungibles, transferencias y seteo de metadata.
+JS client to create fungible tokens, transfer it and set metadata
 
 ## Overview
 
-- **src/index.ts**: archivo principal para la creación y transferencia de tokens
-- **src/initializeKeypair.ts**: inicializa una nueva wallet y la fondea para la posterior creación del token
-- **src/metadata.ts**: seteo de metadata del token luego de crearlo
-- **src/token.service.ts**: servicio con las funciones necesarias para interactuar con tokens
+- **src/index.ts**: principal file to create and transfer tokens
+- **src/initializeKeypair.ts**: mock to initialize a wallet with some of SOL
+- **src/metadata.ts**: set metadata of previously created token 
+- **src/token.service.ts**: simple service with the necessary function to interact with @solana/spl-token
+- **src/token-instruction.service.ts**: similar service, but works with an instruction logic to create each transaction
 
-> Utilizar al menos NodeJS v16
+> Use at least NodeJS v16
 
 ### 1. Create new token
 
-- Configurar el `ADDRESS_RECEIVER` en el `index.ts`. Se recomienda colocar la clave publica de una wallet Phantom para visualizar los tokens posteriormente.
+- Config `ADDRESS_RECEIVER` in `index.ts` file. It is recommended to set the Phantom wallet public key to visualize the tokens subsequently.
 - `npm run start`
-- Visualizar en la wallet Phantom `ADDRESS_RECEIVER` los tokens recibidos, sin un nombre ni logo.
+- Visualize in the Phantom wallet, `ADDRESS_RECEIVER`, the tokens received, without name and logo.
 
 ### 2. Set token metadata
 
-- Configurar en `metadata.ts` el nombre, símbolo, descripción e imagen del token, además del `MINT_ADDRESS` obtenido en el paso anterior.
+- Config in the `metadata.ts` file the name, symbol, description and the token image, besides set the `MINT_ADDRESS` got in the previous step.
 - `npm run metadata`
-- Visualizar nuevamente la wallet Phantom `ADDRESS_RECEIVER`, el token ahora debería tener nombre e imagen.
-- Buscar con el `MINT_ADDRESS` en [Solana Explorer DevNet](https://explorer.solana.com/?cluster=devnet) el token para visualizar la metadata, supply, owner, entre otros datos.
+- Visualize the Phantom wallet, `ADDRESS_RECEIVER`, again. The token should have the name and image.
+- Visualize the `MINT_ADDRESS` in [Solana Explorer DevNet](https://explorer.solana.com/?cluster=devnet). The token should have metadata, current supply, owner, and among other data.
