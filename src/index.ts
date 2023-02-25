@@ -32,7 +32,7 @@ async function main() {
     tokenAccount.address,
     receiverTokenAccount.address,
     wallet.publicKey,
-    1,
+    2,
     mint
   )
 }

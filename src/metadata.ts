@@ -12,11 +12,9 @@ const MINT_ADDRESS = 'GA1eaCUTxQ1py7EujsiAm4DDvEfhAq8vsbEQ5Yvh3umx'
 
 async function main() {
 
-  const connection = new Connection(clusterApiUrl('devnet'))
+  const connection = new Connection(clusterApiUrl('devnet'));
 
-  const wallet = await initializeKeypair(connection)
-
-
+  const wallet = await initializeKeypair(connection);
 
   // Metaplex setup
   const metaplex = Metaplex.make(connection)
@@ -28,9 +26,7 @@ async function main() {
         providerUrl: 'https://api.devnet.solana.com',
         timeout: 60000,
       })
-    )
-
-
+    );
 
   // Creamos MetadataAccount del token (https://docs.metaplex.com/programs/token-metadata/overview)
   await createTokenMetadata(
@@ -42,15 +38,15 @@ async function main() {
     TOKEN_SYMBOL,
     TOKEN_DESCRIPTION,
     TOKEN_IMAGE_URL,
-  )
+  );
 }
 
 main()
   .then(() => {
-    console.log('Finished successfully')
-    process.exit(0)
+    console.log('Finished successfully');
+    process.exit(0);
   })
   .catch((error) => {
-    console.log(error)
-    process.exit(1)
+    console.log(error);
+    process.exit(1);
   })

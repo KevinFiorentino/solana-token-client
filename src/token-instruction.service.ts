@@ -1,11 +1,14 @@
-import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata'
-import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js'
-import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram } from '@solana/web3.js'
+import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
+import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js';
+import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction, SystemProgram } from '@solana/web3.js';
 import {
-  getMint, getOrCreateAssociatedTokenAccount, createInitializeMintInstruction, createMintToInstruction, createTransferInstruction, createBurnInstruction,
-  TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, MINT_SIZE, MintLayout
-} from '@solana/spl-token'
-import * as fs from 'fs'
+  getMint, getAccount, createInitializeMintInstruction, createMintToInstruction, createTransferInstruction, createBurnInstruction,
+  getAssociatedTokenAddress, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, MINT_SIZE, MintLayout,
+  TokenAccountNotFoundError, TokenInvalidAccountOwnerError
+} from '@solana/spl-token';
+import * as fs from 'fs';
+
+// Source: https://www.programcreek.com/typescript/?api=@solana/spl-token.createInitializeMintInstruction
 
 export async function createNewMint(
   connection: Connection,
@@ -14,8 +17,6 @@ export async function createNewMint(
   freezeAuthority: PublicKey,        // Address con permisos para bloquear la creación de tokens (centralización)
   decimals: number
 ): Promise<PublicKey> {
-
-  // Source: https://www.programcreek.com/typescript/?api=@solana/spl-token.createInitializeMintInstruction
 
   const tokenMint = new Keypair();
   const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
@@ -43,7 +44,7 @@ export async function createNewMint(
     [payer, tokenMint]
   );
 
-  console.log('tokenMint', tokenMint.publicKey.toString())
+  console.log('tokenMint', tokenMint.publicKey.toString());
 
   return tokenMint.publicKey;
 }
@@ -55,10 +56,44 @@ export async function createTokenAccount(
   owner: PublicKey
 ) {
 
-  const tokenAccount = await getOrCreateAssociatedTokenAccount(connection, payer, mint, owner)
-  console.log(`Token Account: ${tokenAccount.address}`)
+  // ATA = Associated Token Address
+  const ATA = await getAssociatedTokenAddress(mint, owner, true, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
 
-  return tokenAccount
+  let account;
+
+  try {
+    account = await getAccount(connection, ATA, 'confirmed', TOKEN_PROGRAM_ID);
+  }
+  catch (error) {
+    if (error instanceof TokenAccountNotFoundError || error instanceof TokenInvalidAccountOwnerError) {
+      try {
+        const transaction = new Transaction().add(
+          createAssociatedTokenAccountInstruction(
+            payer.publicKey,
+            ATA,
+            owner,
+            mint,
+            TOKEN_PROGRAM_ID,
+            ASSOCIATED_TOKEN_PROGRAM_ID,
+          )
+        );
+        const transactionSignature = await sendAndConfirmTransaction(
+          connection,
+          transaction,
+          [payer]
+        );
+      }
+      catch (error) {}
+      account = await getAccount(connection, ATA, 'confirmed', TOKEN_PROGRAM_ID);
+    }
+    else {
+      throw error;
+    }
+  }
+
+  console.log(`Token Account: ${account.address}`);
+
+  return account;
 }
 
 export async function mintTokens(
@@ -99,7 +134,7 @@ export async function transferTokens(
   mint: PublicKey
 ) {
 
-  const mintInfo = await getMint(connection, mint)
+  const mintInfo = await getMint(connection, mint);
   const transaction = new Transaction().add(
     createTransferInstruction(
       source,                             // Token account address
@@ -115,7 +150,7 @@ export async function transferTokens(
     [payer]
   );
 
-  console.log(`Transfer Transaction: ${transactionSignature}`)
+  console.log(`Transfer Transaction: ${transactionSignature}`);
 }
 
 export async function burnTokens(
@@ -127,7 +162,7 @@ export async function burnTokens(
   amount: number
 ) {
 
-  const mintInfo = await getMint(connection, mint)
+  const mintInfo = await getMint(connection, mint);
   const transaction = new Transaction().add(
     createBurnInstruction(
       account,
@@ -143,7 +178,7 @@ export async function burnTokens(
     [payer]
   );
 
-  console.log(`Burn Transaction: ${transactionSignature}`)
+  console.log(`Burn Transaction: ${transactionSignature}`);
 }
 
 export async function createTokenMetadata(
@@ -157,14 +192,14 @@ export async function createTokenMetadata(
   image_url: string,
 ) {
 
-  const l = image_url.split('/').length
-  const image_name = image_url.split('/')[l - 1]
+  const l = image_url.split('/').length;
+  const image_name = image_url.split('/')[l - 1];
 
-  const buffer = fs.readFileSync(image_url)
-  const file = toMetaplexFile(buffer, image_name)
+  const buffer = fs.readFileSync(image_url);
+  const file = toMetaplexFile(buffer, image_name);
 
-  const imageUri = await metaplex.storage().upload(file)
-  console.log('Image URI:', imageUri)
+  const imageUri = await metaplex.storage().upload(file);
+  console.log('Image URI:', imageUri);
 
   // Upload metadata and get metadata uri (off chain metadata)
   const { uri } = await metaplex
@@ -173,11 +208,11 @@ export async function createTokenMetadata(
       name: name,
       description: description,
       image: imageUri,
-    })
-  console.log('Metadata URI:', uri)
+    });
+  console.log('Metadata URI:', uri);
 
   // Get metadata account address
-  const metadataPDA = metaplex.nfts().pdas().metadata({mint})
+  const metadataPDA = metaplex.nfts().pdas().metadata({mint});
 
   // Onchain metadata format
   const tokenMetadata = {
@@ -188,7 +223,7 @@ export async function createTokenMetadata(
     creators: null,
     collection: null,
     uses: null,
-  } as DataV2
+  } as DataV2;
 
   // Transaction to create metadata account
   const transaction = new Transaction().add(
@@ -207,13 +242,13 @@ export async function createTokenMetadata(
         },
       }
     )
-  )
+  );
 
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
     [user]
-  )
+  );
 
-  console.log(`Create Metadata Account: ${transactionSignature}`)
+  console.log(`Create Metadata Account: ${transactionSignature}`);
 }
