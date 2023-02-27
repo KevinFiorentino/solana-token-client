@@ -10,6 +10,12 @@ import * as fs from 'fs';
 
 // Source: https://www.programcreek.com/typescript/?api=@solana/spl-token.createInitializeMintInstruction
 
+/*
+  You can sign and send the transaction like this:
+  const transactionSigned = await window.solana.signTransaction(transaction);
+  const tx = await connection.sendRawTransaction(transactionSigned.serialize());
+*/
+
 export async function createNewMint(
   connection: Connection,
   payer: Keypair,
