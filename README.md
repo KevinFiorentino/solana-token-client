@@ -10,7 +10,7 @@ JS client to create fungible tokens, transfer it and set metadata
 - **src/token.service.ts**: simple service with the necessary function to interact with @solana/spl-token
 - **src/token-instruction.service.ts**: similar service, but works with an instruction logic to create each transaction
 
-> Use at least NodeJS v16
+> Use at least NodeJS v18
 
 ### 1. Create new token
 

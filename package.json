@@ -5,9 +5,12 @@
     "main": "index.ts",
     "scripts": {
         "start": "ts-node src/index.ts",
-        "metadata": "ts-node src/metadata.ts"
+        "metadata": "ts-node src/metadata.ts",
+        "info": "ts-node src/token-info.ts"
     },
-    "keywords": [],
+    "keywords": [
+        "Solana", "Metaplex"
+    ],
     "author": "test",
     "license": "ISC",
     "dependencies": {
