@@ -24,3 +24,9 @@ JS client to create fungible tokens, transfer it and set metadata
 - `npm run metadata`
 - Visualize the Phantom wallet, `ADDRESS_RECEIVER`, again. The token should have the name and image.
 - Visualize the `MINT_ADDRESS` in [Solana Explorer DevNet](https://explorer.solana.com/?cluster=devnet). The token should have metadata, current supply, owner, and among other data.
+
+### 3. Get token metadata
+
+- Config in the `token-info.ts` file the `MINT_ADDRESS` got in the first step.
+- `npm run info`
+- You can visualize the token information in three parts: the token information, the on-chain metadata, and the off-chain metadata.

@@ -50,7 +50,7 @@ export async function createNewMint(
     [payer, tokenMint]
   );
 
-  console.log('tokenMint', tokenMint.publicKey.toString());
+  console.log('Token Mint:', tokenMint.publicKey.toString());
 
   return tokenMint.publicKey;
 }

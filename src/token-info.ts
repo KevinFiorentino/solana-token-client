@@ -4,9 +4,11 @@ import { Metaplex, keypairIdentity } from '@metaplex-foundation/js';
 import { initializeKeypair } from './initializeKeypair'
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 
-const MINT_ADDRESS = 'Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr'
+const MINT_ADDRESS = 'BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ'
 
-// Custom Token: Gd4ovq5zF6o1vcENtR68dmmD1pnEaNsNq5RwrbrZ3FoW
+// Custom Token example: BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ
+
+// USDC does not have Metaplex metadata. Why? --> https://solana.stackexchange.com/questions/6182/get-usdc-metadata
 // USDC-Dev: Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr
 
 async function main() {

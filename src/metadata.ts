@@ -8,7 +8,7 @@ const TOKEN_SYMBOL = 'TKN'
 const TOKEN_DESCRIPTION = 'My first token!'
 const TOKEN_IMAGE_URL = './assets/token-image.png'     // Size recommend 100x100
 
-const MINT_ADDRESS = 'GA1eaCUTxQ1py7EujsiAm4DDvEfhAq8vsbEQ5Yvh3umx'
+const MINT_ADDRESS = 'BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ'
 
 async function main() {
 
