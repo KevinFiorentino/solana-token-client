@@ -1,4 +1,4 @@
-import { DataV2, createCreateMetadataAccountV2Instruction } from '@metaplex-foundation/mpl-token-metadata';
+import { DataV2, createCreateMetadataAccountV3Instruction } from '@metaplex-foundation/mpl-token-metadata';
 import { Metaplex, toMetaplexFile } from '@metaplex-foundation/js';
 import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
 import { Account, createMint, getMint, mintTo, transfer, burn, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
@@ -122,9 +122,10 @@ export async function createTokenMetadata(
   const { uri } = await metaplex
     .nfts()
     .uploadMetadata({
-      name: name,
-      description: description,
+      ipfsImageHash: 'QmevBtvuBezYCHUnmPpvDTjQ6mHANcS4ZnV14MvtYAvzY7',
       image: imageUri,
+      type: 'token',
+      data: {}
     });
   console.log('Metadata URI:', uri);
 
@@ -144,7 +145,7 @@ export async function createTokenMetadata(
 
   // Transaction to create metadata account
   const transaction = new Transaction().add(
-    createCreateMetadataAccountV2Instruction(
+    createCreateMetadataAccountV3Instruction(
       {
         metadata: metadataPDA,
         mint: mint,
@@ -153,9 +154,10 @@ export async function createTokenMetadata(
         updateAuthority: user.publicKey,
       },
       {
-        createMetadataAccountArgsV2: {
+        createMetadataAccountArgsV3: {
           data: tokenMetadata,
           isMutable: true,
+          collectionDetails: null,
         },
       }
     )

@@ -1,14 +1,14 @@
-import { Metaplex, bundlrStorage, walletAdapterIdentity, keypairIdentity } from '@metaplex-foundation/js'
+import { Metaplex, bundlrStorage, keypairIdentity } from '@metaplex-foundation/js'
 import { createTokenMetadata } from './token.service';
 import { initializeKeypair } from './initializeKeypair'
-import { Connection, PublicKey, clusterApiUrl, Keypair } from '@solana/web3.js'
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js'
 
 const TOKEN_NAME = 'Token Name'
 const TOKEN_SYMBOL = 'TKN'
 const TOKEN_DESCRIPTION = 'My first token!'
 const TOKEN_IMAGE_URL = './assets/token-image.png'     // Size recommend 100x100
 
-const MINT_ADDRESS = 'BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ'
+const MINT_ADDRESS = '2fdWkfNkKRC5sFgte5pYaECnXtnLrXVUF83MkKpWaXpz'
 
 async function main() {
 
@@ -19,7 +19,7 @@ async function main() {
   // Metaplex setup
   const metaplex = Metaplex.make(connection)
     .use(keypairIdentity(wallet))
-    // .use(walletAdapterIdentity(wallet))          // Try with this in a front-end
+    // .use(walletAdapterIdentity(wallet))          // Use this in a front-end
     .use(
       bundlrStorage({                               // Image store
         address: 'https://devnet.bundlr.network',

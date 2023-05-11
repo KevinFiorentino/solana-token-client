@@ -4,7 +4,7 @@ import { Metaplex, keypairIdentity } from '@metaplex-foundation/js';
 import { initializeKeypair } from './initializeKeypair'
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 
-const MINT_ADDRESS = 'BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ'
+const MINT_ADDRESS = '2fdWkfNkKRC5sFgte5pYaECnXtnLrXVUF83MkKpWaXpz'
 
 // Custom Token example: BiJFnCBwCtjzRhof98XwBbRmWXfxXxuWjAXPmdpTeeuZ
 
