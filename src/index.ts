@@ -15,7 +15,7 @@ async function main() {
   const wallet = await initializeKeypair(connection)
 
   // Create new MintAccount (https://docs.metaplex.com/programs/token-metadata/overview)
-  const mint = await createNewMint(connection, wallet, wallet.publicKey, wallet.publicKey, 2)
+  const mint = await createNewMint(connection, wallet, wallet.publicKey, wallet.publicKey, 6)
 
   // Create TokenAccount associated to the wallet
   const tokenAccount = await createTokenAccount(connection, wallet, mint, wallet.publicKey)
